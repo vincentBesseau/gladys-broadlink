@@ -1,0 +1,20 @@
+{
+  "name": "gladys-broadlink",
+  "version": "0.1.0",
+  "description": "broadlink module to controle all IR devices",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "gladys",
+    "IR",
+    "broadlink",
+    "remote"
+  ],
+  "author": "vincentBesseau",
+  "dependencies": {
+    "broadlink-js-smth": "^1.0.7",
+    "gladys-mqtt-adapter": "^0.2.1"
+  }
+}

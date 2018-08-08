@@ -1,0 +1,17 @@
+<script src="/hooks/gladys-broadlink/js/broadlink.config.js"></script>
+<script src="/hooks/gladys-broadlink/js/broadlink.controller.js"></script>
+<script src="/hooks/gladys-broadlink/js/broadlink.service.js"></script>
+
+<div data-ng-controller="BroadlinkCtrl as vm">
+    <div class="box skin-box box-default no-border ng-cloak">
+        <div class="box-header with-border">
+            <h3 class="box-title">BROADLINK</h3>
+            <div class="box-tools">
+                {{ 'NEW_NAME' | translate }} <input type="text" ng-model="vm._name" name="_name">
+                <div class="btn-group">
+                    <button type="button" ng-click="vm.LearningMode(vm._name)" class="btn btn-primary btn-flat btn-sm dropdown-toggle" aria-expanded="false">{{ 'BROADLINK_MODE' | translate }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
