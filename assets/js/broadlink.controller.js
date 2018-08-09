@@ -14,7 +14,7 @@
         .module('gladys')
         .controller('BroadlinkCtrl', BroadlinkCtrl);
 
-    ZwaveCtrl.$inject = ['broadlinkService', '$scope'];
+    BroadlinkCtrl.$inject = ['broadlinkService', '$scope'];
 
     function BroadlinkCtrl(broadlinkService, $scope) {
         /* jshint validthis: true */
@@ -22,8 +22,8 @@
         vm._name = null
         vm.LearningMode = LearningMode
 
-        function LearningMode() {
-            return broadlinkService.LearningMode(vm._name)
+        function LearningMode(name) {
+            return broadlinkService.learningMode({'_name':name})
                 .then(function(result){
                     if(result.status === 200){
                         console.log('LearningMode ok')

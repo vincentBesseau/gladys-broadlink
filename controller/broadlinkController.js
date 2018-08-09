@@ -13,7 +13,7 @@ module.exports = {
 
   learningMode: function(req, res, next){
     learningMode(req.body)
-      .then((result) => res.json(result))
+      .then((result) => console.log(result))
   },
 
 }

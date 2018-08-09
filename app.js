@@ -1,10 +1,9 @@
 // if we are running inside sails.js, it means we are running inside Gladys
 // This file is not supposed to run inside Gladys so stop now.
-module.exports = function(sails) {
-	if(sails){
-	    return '';
-	}
 
+if ( typeof sails !== 'undefined' && sails ) {
+    return '';
+}
 var Broadlink = require("broadlink-js-smth");
 var http = require("http");
 var request = require("request");
@@ -16,6 +15,7 @@ var gladysMqttAdapter = require('gladys-mqtt-adapter')({
     MQTT_PASSWORD: config.mqttPassword,
     MODULE_SLUG: 'gladys-broadlink' 
 });
+
 
 
 
@@ -50,7 +50,7 @@ blink.on("deviceReady",function(dev){
 								    "min":0,
 								    "max":1,
 								    "sensor":false,
-								    "device":124
+								    "device":data._deviceId
 								  }
 						var options = {
 						    url: uri,
@@ -82,7 +82,7 @@ blink.on("deviceReady",function(dev){
 		            dev.sendData(convertHexToBuffer)
 			        break;
 		        default:
-		            console.log('Mesage non reconnu');
+		            console.log('Message non reconnu');
 			}
 		})
         
@@ -97,5 +97,3 @@ blink.on("deviceReady",function(dev){
 
     blink.discover(null,[]);
 });
-
-}()
