@@ -15,6 +15,8 @@
   "author": "vincentBesseau",
   "dependencies": {
     "broadlink-js-smth": "^1.0.7",
-    "gladys-mqtt-adapter": "^0.2.1"
+    "gladys-mqtt-adapter": "^0.2.1",
+    "json-fs-store": "^1.0.1",
+    "uuid": "^3.3.2"
   }
 }
