@@ -4,10 +4,14 @@
 if ( typeof sails !== 'undefined' && sails ) {
     return '';
 }
+const pathToStoreFiles = './store/Broadlink/jsonCommands'
 var Broadlink = require("broadlink-js-smth");
-var http = require("http");
+var uuidv4 = require('uuid/v4');
+var jsonStore = require('json-fs-store')(pathToStoreFiles);
+var fs = require('fs');
 var request = require("request");
 const config = require('./config/config.js');
+var uuidExist = true
 var gladysMqttAdapter = require('gladys-mqtt-adapter')({
     MACHINE_ID: config.machineId,
     MQTT_URL: config.mqttUrl,
@@ -41,12 +45,25 @@ blink.on("deviceReady",function(dev){
 
 		            dev.on("rawData",(learn) =>{
 		                clearInterval(checkLearning);
-		                var deviceIdentifier = learn.toString('hex')
+		                var newId = uuidv4()
+		                
+		                if (fs.existsSync(pathToStoreFiles+'/'+newId+'.json')) {
+						    newId = uuidv4()
+						}
+		                
+		                var newJson = {
+		                	id:newId,
+		                	command: learn.toString('hex')
+		                }
+		                jsonStore.add(newJson, function(err) {
+		                	if (err) throw err;
+		                })
+
 		                var uri = config.baseUri + "/devicetype?token="+config.token
 		                var json = {
 								    "name": data._name,
 								    "type": "binary",
-								    "identifier":deviceIdentifier,
+								    "identifier":newId,
 								    "min":0,
 								    "max":1,
 								    "sensor":false,
@@ -65,6 +82,7 @@ blink.on("deviceReady",function(dev){
 						    if (!error && response.statusCode == 200) {
 						        // Print out the response body
 						        console.log('DeviceType Create with success')
+						        learn = null
 						    }
 						    else {
 						    	console.log('Error HTTP '+response.statusCode)
@@ -76,10 +94,13 @@ blink.on("deviceReady",function(dev){
 		            })
 					break;
 				case 'sendData':
-					var command = data._command
-		            console.log(command)
-		            var convertHexToBuffer = new Buffer(command, "hex")
-		            dev.sendData(convertHexToBuffer)
+					var uuid = data._uuid
+		            console.log(uuid)
+		            jsonStore.load(uuid, function(err, object){
+						if(err) throw err;
+						var convertHexToBuffer = new Buffer(object.command, "hex")
+		            	dev.sendData(convertHexToBuffer)
+					});
 			        break;
 		        default:
 		            console.log('Message non reconnu');
@@ -88,12 +109,5 @@ blink.on("deviceReady",function(dev){
         
         
     }
-
-
-    if(dev.host.address == '192.168.0.127'){
-        console.log(">>>>>>>>>>>>>>>>>");
-        dev.set_power(false);
-    }
-
     blink.discover(null,[]);
 });
