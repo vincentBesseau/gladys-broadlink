@@ -87,8 +87,7 @@ blink.on("deviceReady",function(dev){
 						    	console.log('Error HTTP '+response.statusCode)
 						    }
 						})
-		                console.log("hex:"+deviceIdentifier);
-		                //var convertHexToBuffer = new Buffer(toto, "hex")
+		                console.log("hex:"+newJson.command);
 		                
 		            })
 					break;
