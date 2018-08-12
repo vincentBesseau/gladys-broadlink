@@ -11,7 +11,6 @@ var jsonStore = require('json-fs-store')(pathToStoreFiles);
 var fs = require('fs');
 var request = require("request");
 const config = require('./config/config.js');
-var uuidExist = true
 var gladysMqttAdapter = require('gladys-mqtt-adapter')({
     MACHINE_ID: config.machineId,
     MQTT_URL: config.mqttUrl,
@@ -47,7 +46,7 @@ blink.on("deviceReady",function(dev){
 		                clearInterval(checkLearning);
 		                var newId = uuidv4()
 		                
-		                if (fs.existsSync(pathToStoreFiles+'/'+newId+'.json')) {
+		                while (fs.existsSync(pathToStoreFiles+'/'+newId+'.json')) {
 						    newId = uuidv4()
 						}
 		                
