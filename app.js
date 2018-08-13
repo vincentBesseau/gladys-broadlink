@@ -39,7 +39,9 @@ blink.on('discover', function(res) {
 				switch (data._type) {
 					case 'learning':
 						console.log("enterLearning mode");
-						dev.learnCode(function(res,object) {
+						dev.learnCode(function(res,err,object) {
+							console.log(res)
+							console.log(err)
 				            console.log(object);
 				            var newId = uuidv4()
 	            
@@ -100,12 +102,7 @@ blink.on('discover', function(res) {
 			            console.log('Message non reconnu');
 				}
 			})
-	        dev.on("rawData",(learn) =>{
-	            clearInterval(checkLearning);
-	            dev.cancelLearn();
-	            
-	            
-	        })
+
 	    });
         
     }
