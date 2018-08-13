@@ -6,7 +6,6 @@ if ( typeof sails !== 'undefined' && sails ) {
 }
 const pathToStoreFiles = './store/Broadlink/jsonCommands'
 var Broadlink = require("broadlink-js");
-var uuidv4 = require('uuid/v4');
 var jsonStore = require('json-fs-store')(pathToStoreFiles);
 var fs = require('fs');
 var request = require("request");
@@ -30,7 +29,6 @@ blink.on('listen', function(res) {
 
 blink.on('discover', function(res) {
     console.log('discover', res);
-    console.log(res.module)
     if(res.module === 'rm2'){
     	var dev = new Broadlink.BroadlinkDeviceRM2(res);
     	dev.on('ready', function(res) {
@@ -39,29 +37,16 @@ blink.on('discover', function(res) {
 				switch (data._type) {
 					case 'learning':
 						console.log("enterLearning mode");
-						dev.learnCode(function(res,err,object) {
+						dev.learnCode(function(res,object,err) {
 							console.log(res)
 							console.log(err)
 				            console.log(object);
-				            var newId = uuidv4()
-	            
-				            while (fs.existsSync(pathToStoreFiles+'/'+newId+'.json')) {
-							    newId = uuidv4()
-							}
-				            
-				            var newJson = {
-				            	id:newId,
-				            	command: object.toString('hex')
-				            }
-				            jsonStore.add(newJson, function(err) {
-				            	if (err) throw err;
-				            })
 
 				            var uri = config.baseUri + "/devicetype?token="+config.token
 				            var json = {
 									    "name": data._name,
 									    "type": "binary",
-									    "identifier":newId,
+									    "identifier":'broadlink',
 									    "min":0,
 									    "max":1,
 									    "sensor":false,
@@ -79,20 +64,26 @@ blink.on('discover', function(res) {
 							request(options, function (error, response, body) {
 							    if (!error && response.statusCode == 200) {
 							        // Print out the response body
+							        var newJson = {
+														id:body.id,
+														command: object.toString('hex')
+													}
+									jsonStore.add(newJson, function(err) {
+						            	if (err) console.log(err);
+						            })
 							        console.log('DeviceType Create with success')
-							        learn = null
+        				            console.log("hex:"+newJson.command);
 							    }
 							    else {
 							    	console.log('Error HTTP '+response.statusCode)
 							    }
 							})
-				            console.log("hex:"+newJson.command);
 				        });
 						break;
 					case 'sendData':
-						var uuid = data._uuid
-			            console.log(uuid)
-			            jsonStore.load(uuid, function(err, object){
+						var devicetypeId = data._id
+			            console.log(devicetypeId)
+			            jsonStore.load(devicetypeId, function(err, object){
 							if(err) console.log(err);
 							var convertHexToBuffer = new Buffer(object.command, "hex")
 			            	dev.sendData(convertHexToBuffer)
