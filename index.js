@@ -1,11 +1,9 @@
 module.exports = function (sails) {
 
-    var install = require('./lib/install/broadlink.install.js');
     var exec = require('./lib/broadlink.exec.js');
     var BroadlinkController = require('./controller/broadlinkController.js');
 
     return {
-        install,
         exec,
         routes: {
             before: {
