@@ -37,16 +37,14 @@ blink.on('discover', function(res) {
 				switch (data._type) {
 					case 'learning':
 						console.log("enterLearning mode");
-						dev.learnCode(function(res,object,err) {
+						dev.learnCode(function(res,object) {
 							console.log(res)
-							console.log(err)
 				            console.log(object);
 
 				            var uri = config.baseUri + "/devicetype?token="+config.token
 				            var json = {
 									    "name": data._name,
 									    "type": "binary",
-									    "identifier":'broadlink',
 									    "min":0,
 									    "max":1,
 									    "sensor":false,
