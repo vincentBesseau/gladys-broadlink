@@ -29,12 +29,12 @@ blink.on('listen', function(res) {
 
 blink.on('discover', function(res) {
 	console.log('discover', res);
-	gladysMqttAdapter.device.create({
+	gladysMqttAdapter.device.create({device : {
     	name: res.name,
     	protocol: 'MQTT',
     	service: 'gladys-broadlink',
     	identifier: res.module
-    })
+    }})
 
     if(res.module === 'rm2'){
     	var dev = new Broadlink.BroadlinkDeviceRM2(res);
