@@ -1,8 +1,8 @@
 module.exports = {
-    machineId: process.env.BLUETOOTH_SCAN_INTERVAL || 1, // Interval between Bluetooth scans
-    mqttUrl: process.env.BLUETOOTH_SCAN_TIMEOUT || "", // the timeout of each bluetooth scan
-    mqttUsername: process.env.GLADYS_URL || '', // the URL of your main Gladys Instance
-    mqttPassword: process.env.GLADYS_TOKEN || '', // your gladys security token. You can find it in Gladys Dashboard "Parameters" => "Security". 
-    baseUri: process.env.BASEURI || '',
-    token: process.env.TOKEN || '',
+    machineId: process.env.GLADYS_MACHINE_ID || '', // Interval between Bluetooth scans
+    mqttUrl: process.env.MQTT_URI || "", // the timeout of each bluetooth scan
+    mqttUsername: process.env.MQTT_USERNAME || '', // the URL of your main Gladys Instance
+    mqttPassword: process.env.MQTT_PASSWORD || '', // your gladys security token. You can find it in Gladys Dashboard "Parameters" => "Security". 
+    baseUri: process.env.GLADYS_URI || '',
+    token: process.env.GLADYS_TOKEN || '',
 };
