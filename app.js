@@ -29,6 +29,7 @@ blink.on('listen', function(res) {
 
 blink.on('discover', function(res) {
 	console.log('discover', res);
+	console.log('Create device '+res.name);
 	gladysMqttAdapter.device.create({
 		device : {
 	    	name: res.name,
@@ -39,15 +40,23 @@ blink.on('discover', function(res) {
 		types : []
 	})
 
+	if(res.module === 'rm2'){
+		var mp1 = new Broadlink.BroadlinkDeviceMP1(res);
+		console.log(mp1)
+		mp1.on('ready', function(res) {
+			console.log(res)
+		})
+	}
+
     if(res.module === 'rm2'){
-    	var dev = new Broadlink.BroadlinkDeviceRM2(res);
-    	dev.on('ready', function(res) {
+    	var rm2 = new Broadlink.BroadlinkDeviceRM2(res);
+    	rm2.on('ready', function(res) {
 	        gladysMqttAdapter.on('message-notify', function(data) {
 				console.log(data)
 				switch (data._type) {
 					case 'learning':
 						console.log("enterLearning mode");
-						dev.learnCode(function(res,object) {
+						rm2.learnCode(function(res,object) {
 							console.log(res)
 				            console.log(object);
 
@@ -94,7 +103,7 @@ blink.on('discover', function(res) {
 			            jsonStore.load(devicetypeId, function(err, object){
 							if(err) console.log(err);
 							var convertHexToBuffer = new Buffer(object.command, "hex")
-			            	dev.sendData(convertHexToBuffer)
+			            	rm2.sendData(convertHexToBuffer)
 						});
 				        break;
 			        default:
