@@ -55,7 +55,7 @@ blink.on('discover', function(res) {
 					default:
 			            console.log('Message non reconnu');
 			    }
-			}
+			})
 		})
 	}
 
