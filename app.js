@@ -47,29 +47,27 @@ blink.on('discover', function(res) {
 		types : getDeviceTypesMp1(res.module)
 	})
 
-	if(res.module === 'mp1'){
-		var mp1 = new Broadlink.BroadlinkDeviceMP1(res);
-		if (debug) console.log('mp1', mp1)
-		mp1.on('ready', function(res) {
-			gladysMqttAdapter.on('message-notify', function(data) {
-				if (debug) console.log('json', data)
+	gladysMqttAdapter.on('message-notify', function(data) {
+		if (debug) console.log('json', data)
+
+		if(res.module === 'mp1' && data._module === 'MP1'){
+			var mp1 = new Broadlink.BroadlinkDeviceMP1(res);
+			if (debug) console.log('mp1', mp1)
+			mp1.on('ready', function(res) {
 				switch (data._type) {
 					case 'setPower':
-						mp1.setPower(data._state,[_index])
+						mp1.setPower(data._state,[data._index])
 						break;
 					default:
 			            console.log('Message non reconnu');
 			    }
 			})
-		})
-	}
+		}
 
-    if(res.module === 'rm2'){
-    	var rm2 = new Broadlink.BroadlinkDeviceRM2(res);
-    	if (debug) console.log('rm2', rm2)
-    	rm2.on('ready', function(res) {
-	        gladysMqttAdapter.on('message-notify', function(data) {
-				if (debug) console.log('json', data)
+	    if(res.module === 'rm2' && data._module === 'RM2'){
+	    	var rm2 = new Broadlink.BroadlinkDeviceRM2(res);
+	    	if (debug) console.log('rm2', rm2)
+	    	rm2.on('ready', function(res) {
 				switch (data._type) {
 					case 'learning':
 						console.log("enterLearning mode");
@@ -120,6 +118,7 @@ blink.on('discover', function(res) {
 			            if (debug) console.log('devicetypeId', devicetypeId)
 			            jsonStore.load(devicetypeId, function(err, object){
 							if(!err) {
+								console.log('Exec command')
 								var convertHexToBuffer = new Buffer(object.command, "hex")
 			            		rm2.sendData(convertHexToBuffer)
 			            	} else {
@@ -131,11 +130,11 @@ blink.on('discover', function(res) {
 			        default:
 			            console.log('Message non reconnu');
 				}
-			})
 
-	    });
-        
-    }
+		    });
+	        
+	    }
+	})
 });
 
 blink.discover();
