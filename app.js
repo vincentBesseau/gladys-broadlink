@@ -75,7 +75,7 @@ blink.on('discover', function(res) {
 				            var json = {
 									    "name": data._name,
 									    "type": "binary",
-									    "tag": "RM2",
+									    "unit": "RM2",
 									    "min":0,
 									    "max":1,
 									    "sensor":false,
