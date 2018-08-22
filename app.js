@@ -4,11 +4,13 @@
 if ( typeof sails !== 'undefined' && sails ) {
     return '';
 }
+
 const pathToStoreFiles = './store/Broadlink/jsonCommands'
 var Broadlink = require("broadlink-js");
 var jsonStore = require('json-fs-store')(pathToStoreFiles);
 var fs = require('fs');
 var request = require("request");
+const getDeviceTypesMp1 = require('./lib/install/devicetypeMP1')
 const config = require('./config/config.js');
 var gladysMqttAdapter = require('gladys-mqtt-adapter')({
     MACHINE_ID: config.machineId,
@@ -37,14 +39,23 @@ blink.on('discover', function(res) {
 	    	service: 'gladys-broadlink',
 	    	identifier: res.module
 		},
-		types : []
+		types : getDeviceTypesMp1(res.module)
 	})
 
-	if(res.module === 'rm2'){
+	if(res.module === 'mp1'){
 		var mp1 = new Broadlink.BroadlinkDeviceMP1(res);
 		console.log(mp1)
 		mp1.on('ready', function(res) {
-			console.log(res)
+			gladysMqttAdapter.on('message-notify', function(data) {
+				console.log(data)
+				switch (data._type) {
+					case 'setPower':
+						mp1.setPower(data._state,[_index])
+						break;
+					default:
+			            console.log('Message non reconnu');
+			    }
+			}
 		})
 	}
 
