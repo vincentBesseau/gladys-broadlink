@@ -113,9 +113,12 @@ blink.on('discover', function(res) {
 						var devicetypeId = data._id
 			            console.log(devicetypeId)
 			            jsonStore.load(devicetypeId, function(err, object){
-							if(err) console.log(err);
-							var convertHexToBuffer = new Buffer(object.command, "hex")
-			            	rm2.sendData(convertHexToBuffer)
+							if(!err) {
+								var convertHexToBuffer = new Buffer(object.command, "hex")
+			            		rm2.sendData(convertHexToBuffer)
+			            	} else {
+			            		console.log('No command exist !')
+			            	}
 						});
 				        break;
 			        default:
