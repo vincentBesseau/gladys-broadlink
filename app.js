@@ -6,6 +6,7 @@ if ( typeof sails !== 'undefined' && sails ) {
 }
 
 const pathToStoreFiles = './store/Broadlink/jsonCommands'
+var argv = require('minimist')(process.argv.slice(2));
 var Broadlink = require("broadlink-js");
 var jsonStore = require('json-fs-store')(pathToStoreFiles);
 var fs = require('fs');
@@ -19,18 +20,22 @@ var gladysMqttAdapter = require('gladys-mqtt-adapter')({
     MQTT_PASSWORD: config.mqttPassword,
     MODULE_SLUG: 'gladys-broadlink' 
 });
+var debug = false
 
+if ( typeof argv.d !== 'undefined' && argv.d ) {
+    debug = argv.d
+}
 
 
 
 var blink = new Broadlink.Broadlink();
 
 blink.on('listen', function(res) {
-    console.log('listening', res);
+    if (debug) console.log('listening', res);
 })
 
 blink.on('discover', function(res) {
-	console.log('discover', res);
+	if (debug) console.log('discover', res);
 	console.log('Create device '+res.name);
 	gladysMqttAdapter.device.create({
 		device : {
@@ -44,10 +49,10 @@ blink.on('discover', function(res) {
 
 	if(res.module === 'mp1'){
 		var mp1 = new Broadlink.BroadlinkDeviceMP1(res);
-		console.log(mp1)
+		if (debug) console.log('mp1', mp1)
 		mp1.on('ready', function(res) {
 			gladysMqttAdapter.on('message-notify', function(data) {
-				console.log(data)
+				if (debug) console.log('json', data)
 				switch (data._type) {
 					case 'setPower':
 						mp1.setPower(data._state,[_index])
@@ -61,15 +66,16 @@ blink.on('discover', function(res) {
 
     if(res.module === 'rm2'){
     	var rm2 = new Broadlink.BroadlinkDeviceRM2(res);
+    	if (debug) console.log('rm2', rm2)
     	rm2.on('ready', function(res) {
 	        gladysMqttAdapter.on('message-notify', function(data) {
-				console.log(data)
+				if (debug) console.log('json', data)
 				switch (data._type) {
 					case 'learning':
 						console.log("enterLearning mode");
 						rm2.learnCode(function(res,object) {
-							console.log(res)
-				            console.log(object);
+							if (debug) console.log('res', res)
+				            if (debug) console.log('object', object);
 
 				            var uri = config.baseUri + "/devicetype?token="+config.token
 				            var json = {
@@ -101,7 +107,7 @@ blink.on('discover', function(res) {
 						            	if (err) console.log(err);
 						            })
 							        console.log('DeviceType Create with success')
-        				            console.log("hex:"+newJson.command);
+        				            if (debug) console.log("hex:"+newJson.command);
 							    }
 							    else {
 							    	console.log('Error HTTP '+response.statusCode)
@@ -111,13 +117,14 @@ blink.on('discover', function(res) {
 						break;
 					case 'sendData':
 						var devicetypeId = data._id
-			            console.log(devicetypeId)
+			            if (debug) console.log('devicetypeId', devicetypeId)
 			            jsonStore.load(devicetypeId, function(err, object){
 							if(!err) {
 								var convertHexToBuffer = new Buffer(object.command, "hex")
 			            		rm2.sendData(convertHexToBuffer)
 			            	} else {
 			            		console.log('No command exist !')
+			            		if (debug) console.log(err)
 			            	}
 						});
 				        break;
