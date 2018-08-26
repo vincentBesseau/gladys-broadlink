@@ -78,7 +78,7 @@ blink.on('discover', function(res) {
 				            var uri = config.baseUri + "/devicetype?token="+config.token
 				            var json = {
 									    "name": data._name,
-									    "type": "binary",
+									    "type": "push",
 									    "unit": "RM2",
 									    "min":0,
 									    "max":1,
