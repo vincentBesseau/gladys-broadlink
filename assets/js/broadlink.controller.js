@@ -18,7 +18,7 @@
             return deviceService.get()
             .then(function(devices) {
                 var RM2Device = [];
-                devices.forEach(function(device) {
+                devices.data.forEach(function(device) {
                     if(device.service === 'broadlink' && device.protocol === 'RM2') RM2Device.push(device);
                 })
                 return RM2Device;
