@@ -5,16 +5,28 @@
         .module('gladys')
         .controller('BroadlinkCtrl', BroadlinkCtrl);
 
-    BroadlinkCtrl.$inject = ['broadlinkService', '$scope'];
+    BroadlinkCtrl.$inject = ['broadlinkService', 'deviceService', '$scope'];
 
-    function BroadlinkCtrl(broadlinkService, $scope) {
+    function BroadlinkCtrl(broadlinkService, deviceService, $scope) {
         /* jshint validthis: true */
-        var vm = this
-        vm._name = null
-        vm.LearningMode = LearningMode
+        var vm = this;
+        vm._name = null;
+        vm.LearningMode = LearningMode;
+        vm.RM2devices = getRM2Device();
 
-        function LearningMode(name) {
-            return broadlinkService.learningMode({'_name':name})
+        function getRM2Device() {
+            return deviceService.get()
+            .then(function(devices) {
+                var RM2Device = [];
+                devices.forEach(function(device) {
+                    if(device.service === 'broadlink' && device.protocol === 'RM2') RM2Device.push(device);
+                })
+                return RM2Device;
+            })
+        }
+
+        function LearningMode(id,name) {
+            return broadlinkService.learningMode({'deviceId':id, '_name':name})
                 .then(function(result){
                     if(result.status === 200){
                         console.log('LearningMode ok')

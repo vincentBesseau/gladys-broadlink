@@ -6,10 +6,15 @@
     <div class="box skin-box box-default no-border ng-cloak">
         <div class="box-header with-border">
             <h3 class="box-title">BROADLINK</h3>
-            <div class="box-tools">
-                {{ 'NEW_NAME' | translate }} <input type="text" ng-model="vm._name" name="_name">
-                <div class="btn-group">
-                    <button type="button" ng-click="vm.LearningMode(vm._name)" class="btn btn-primary btn-flat btn-sm dropdown-toggle" aria-expanded="false">{{ 'BROADLINK_MODE' | translate }}</button>
+            <div ng-repeat="device in vm.RM2devices"> ...
+                <div style="text-align:left;">
+                    {{device.name}} - {{device.room.name}}
+                </div>
+                <div class="box-tools">
+                    {{ 'NEW_NAME' | translate }} <input type="text" ng-model="vm._name" name="_name">
+                    <div class="btn-group">
+                        <button type="button" ng-click="vm.LearningMode(vm._name)" class="btn btn-primary btn-flat btn-sm dropdown-toggle" aria-expanded="false">{{ 'BROADLINK_MODE' | translate }}</button>
+                    </div>
                 </div>
             </div>
         </div>
