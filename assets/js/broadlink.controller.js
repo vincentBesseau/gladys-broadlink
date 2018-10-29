@@ -12,16 +12,19 @@
         var vm = this;
         vm._name = null;
         vm.LearningMode = LearningMode;
-        vm.RM2devices = getRM2Device();
+        vm.RM2devices = [];
+
+        getRM2Device();
 
         function getRM2Device() {
             return deviceService.get()
             .then(function(devices) {
-                var RM2Device = [];
                 devices.data.forEach(function(device) {
-                    if(device.service === 'broadlink' && device.protocol === 'RM2') RM2Device.push(device);
+                    if(device.service === 'broadlink' && device.protocol === 'RM2') {
+                        vm.RM2devices.push(device);                        
+                    }
                 })
-                return RM2Device;
+                return vm.RM2devices;
             })
         }
 
