@@ -2,10 +2,17 @@ module.exports = function (sails) {
 
     var exec = require('./lib/broadlink.exec.js');
     var BroadlinkController = require('./controller/broadlinkController.js');
-    var uninstall = require = require('./lib/uninstall.js')
+    var install = require('./lib/broadlink.install.js');
+    var uninstall = require('./lib/uninstall.js');
+    var init = require('./lib/broadlink.init.js');
+
+    gladys.on('ready', function(){
+		init();
+	});
 
     return {
         exec,
+        install,
         uninstall,
         routes: {
             before: {
