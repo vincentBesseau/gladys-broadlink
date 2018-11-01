@@ -2,7 +2,7 @@ module.exports = function (sails) {
 
     var exec = require('./lib/broadlink.exec.js');
     var BroadlinkController = require('./controller/broadlinkController.js');
-    var install = require('./lib/broadlink.install.js');
+    var setup = require('./lib/broadlink.setup.js');
     var uninstall = require('./lib/uninstall.js');
     var init = require('./lib/broadlink.init.js');
 
@@ -12,7 +12,7 @@ module.exports = function (sails) {
 
     return {
         exec,
-        install,
+        setup,
         uninstall,
         routes: {
             before: {
