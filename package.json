@@ -14,7 +14,7 @@
   ],
   "author": "vincentBesseau",
   "dependencies": {
-    "broadlink": "github:songfei/broadlink-js#0.0.1",
+    "broadlink": "github:songfei/broadlink-js#817102ea4b904883b5dc858b475f39dbbcf96548",
     "gladys-mqtt-adapter": "^0.2.1",
     "json-fs-store": "^1.0.1",
     "request": "^2.88.0",
