@@ -2,21 +2,42 @@
 <script src="/hooks/broadlink/js/broadlink.controller.js"></script>
 <script src="/hooks/broadlink/js/broadlink.service.js"></script>
 
-<div data-ng-controller="BroadlinkCtrl as vm">
+ <div data-ng-controller="BroadlinkCtrl as vm">
     <div class="box skin-box box-default no-border ng-cloak">
         <div class="box-header with-border">
             <h3 class="box-title">BROADLINK</h3>
-            <div ng-repeat="device in vm.RM2devices"> ...
-                <div style="text-align:left;">
-                    {{device.name}} - {{device.room.name}}
-                </div>
-                <div class="box-tools">
-                    {{ 'NEW_NAME' | translate }} <input type="text" ng-model="vm._name" name="_name">
-                    <div class="btn-group">
-                        <button type="button" ng-click="vm.LearningMode(device.id,vm._name)" class="btn btn-primary btn-flat btn-sm dropdown-toggle" aria-expanded="false">{{ 'BROADLINK_MODE' | translate }}</button>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
-</div>
+    <div class="form-group">
+    <div class="row">
+        <div class="col-xs-3">
+        <select ng-model="device" class="form-control" class="ng-cloak" ng-options="device as (device.name + (device.room.name===null ? '' : ' ('+device.room.name+')' )) for device in vm.RM2devices" ng-change="vm.selectedDevice=device;vm.getRM2DeviceType(device)">
+        </select>
+        </div>
+    </div>
+    </div>
+
+    <div class="form-group">
+    {{ 'NEW_NAME' | translate }} <input type="text" ng-model="vm._name[$index]" name="_name">
+    <div class="btn-group">
+        <button type="button" ng-click="vm.LearningMode(vm.selectedDevice,vm._name[$index])" class="btn btn-primary btn-flat btn-sm dropdown-toggle" aria-expanded="false">{{ 'BROADLINK_MODE' | translate }}</button>
+    </div>
+    </div>
+
+    <div class="box-body table-responsive">
+    <table class="table table-bordered table-hover" style="width:300px">
+        <thead>
+        <tr>
+            <th style="width:100px">id</th>
+            <th style="width:200px">Name</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="deviceType in vm.RM2deviceType">
+            <td>{{deviceType.id}}</td>
+            <td>{{deviceType.name}}</td>
+        </tr>
+        </tbody>
+    </table>
+    </div>
+</div> 
